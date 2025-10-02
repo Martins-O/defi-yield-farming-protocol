@@ -55,6 +55,7 @@ function App() {
   const [loading, setLoading] = useState<boolean>(false);
   const [message, setMessage] = useState<{ type: string; text: string } | null>(null);
   const [activeSection, setActiveSection] = useState<string>('home');
+  const [activeDashboardPage, setActiveDashboardPage] = useState<string>('overview');
 
   // Initialize scroll animations
   useScrollAnimation();
@@ -1287,107 +1288,1574 @@ function App() {
     </div>
   );
 
+  const renderDashboardOverview = () => (
+    <div className="dashboard-overview">
+      {/* Portfolio Summary */}
+      <div className="portfolio-summary">
+        <div className="summary-cards">
+          <div className="summary-card hover-lift">
+            <div className="card-header">
+              <h3>Total Portfolio Value</h3>
+              <span className="card-icon">💰</span>
+            </div>
+            <div className="card-value">$12,450.67</div>
+            <div className="card-change positive">+5.23% (24h)</div>
+          </div>
+          <div className="summary-card hover-lift">
+            <div className="card-header">
+              <h3>Total Staked</h3>
+              <span className="card-icon">🏦</span>
+            </div>
+            <div className="card-value">{userStats.stakedAmount || '0'} LP</div>
+            <div className="card-change neutral">Across 3 pools</div>
+          </div>
+          <div className="summary-card hover-lift">
+            <div className="card-header">
+              <h3>Pending Rewards</h3>
+              <span className="card-icon">⭐</span>
+            </div>
+            <div className="card-value">{userStats.pendingReward || '0'} YFT</div>
+            <div className="card-change positive">Ready to harvest</div>
+          </div>
+          <div className="summary-card hover-lift">
+            <div className="card-header">
+              <h3>Average APY</h3>
+              <span className="card-icon">📈</span>
+            </div>
+            <div className="card-value">23.7%</div>
+            <div className="card-change positive">+2.1% this week</div>
+          </div>
+        </div>
+      </div>
+
+      {/* Quick Actions */}
+      <div className="quick-actions">
+        <h3>Quick Actions</h3>
+        <div className="actions-grid">
+          <button className="action-btn hover-lift hover-shimmer" onClick={() => setActiveDashboardPage('pools')}>
+            <span className="action-icon">🌊</span>
+            <span className="action-text">Browse Pools</span>
+          </button>
+          <button className="action-btn hover-lift hover-shimmer" onClick={handleHarvest} disabled={loading}>
+            <span className="action-icon">🌾</span>
+            <span className="action-text">Harvest All</span>
+          </button>
+          <button className="action-btn hover-lift hover-shimmer" onClick={() => setActiveDashboardPage('portfolio')}>
+            <span className="action-icon">📊</span>
+            <span className="action-text">View Portfolio</span>
+          </button>
+          <button className="action-btn hover-lift hover-shimmer" onClick={() => setActiveDashboardPage('analytics')}>
+            <span className="action-icon">📈</span>
+            <span className="action-text">Analytics</span>
+          </button>
+        </div>
+      </div>
+
+      {/* Active Positions */}
+      <div className="active-positions">
+        <h3>Active Positions</h3>
+        <div className="positions-grid">
+          <div className="position-card hover-lift">
+            <div className="position-header">
+              <div className="pool-tokens">
+                <span className="token-icon">💎</span>
+                <span className="token-icon">💰</span>
+              </div>
+              <div className="position-info">
+                <h4>ETH-USDC LP</h4>
+                <span className="pool-type">Stable Pair</span>
+              </div>
+            </div>
+            <div className="position-stats">
+              <div className="stat">
+                <span className="stat-label">Staked</span>
+                <span className="stat-value">2,500 LP</span>
+              </div>
+              <div className="stat">
+                <span className="stat-label">Value</span>
+                <span className="stat-value">$5,245.30</span>
+              </div>
+              <div className="stat">
+                <span className="stat-label">APY</span>
+                <span className="stat-value">24.5%</span>
+              </div>
+              <div className="stat">
+                <span className="stat-label">Pending</span>
+                <span className="stat-value">45.67 YFT</span>
+              </div>
+            </div>
+            <div className="position-actions">
+              <button className="btn-secondary">Manage</button>
+              <button className="btn-primary">Harvest</button>
+            </div>
+          </div>
+
+          <div className="position-card hover-lift">
+            <div className="position-header">
+              <div className="pool-tokens">
+                <span className="token-icon">🔥</span>
+                <span className="token-icon">💎</span>
+              </div>
+              <div className="position-info">
+                <h4>YFT-ETH LP</h4>
+                <span className="pool-type">High Yield</span>
+              </div>
+            </div>
+            <div className="position-stats">
+              <div className="stat">
+                <span className="stat-label">Staked</span>
+                <span className="stat-value">1,200 LP</span>
+              </div>
+              <div className="stat">
+                <span className="stat-label">Value</span>
+                <span className="stat-value">$3,890.45</span>
+              </div>
+              <div className="stat">
+                <span className="stat-label">APY</span>
+                <span className="stat-value">45.2%</span>
+              </div>
+              <div className="stat">
+                <span className="stat-label">Pending</span>
+                <span className="stat-value">78.32 YFT</span>
+              </div>
+            </div>
+            <div className="position-actions">
+              <button className="btn-secondary">Manage</button>
+              <button className="btn-primary">Harvest</button>
+            </div>
+          </div>
+
+          <div className="position-card hover-lift">
+            <div className="position-header">
+              <div className="pool-tokens">
+                <span className="token-icon">🌟</span>
+                <span className="token-icon">💰</span>
+              </div>
+              <div className="position-info">
+                <h4>DAI-USDC LP</h4>
+                <span className="pool-type">Conservative</span>
+              </div>
+            </div>
+            <div className="position-stats">
+              <div className="stat">
+                <span className="stat-label">Staked</span>
+                <span className="stat-value">5,000 LP</span>
+              </div>
+              <div className="stat">
+                <span className="stat-label">Value</span>
+                <span className="stat-value">$5,002.15</span>
+              </div>
+              <div className="stat">
+                <span className="stat-label">APY</span>
+                <span className="stat-value">12.8%</span>
+              </div>
+              <div className="stat">
+                <span className="stat-label">Pending</span>
+                <span className="stat-value">23.45 YFT</span>
+              </div>
+            </div>
+            <div className="position-actions">
+              <button className="btn-secondary">Manage</button>
+              <button className="btn-primary">Harvest</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Recent Activity */}
+      <div className="recent-activity">
+        <h3>Recent Activity</h3>
+        <div className="activity-list">
+          <div className="activity-item">
+            <div className="activity-icon">🌾</div>
+            <div className="activity-details">
+              <span className="activity-action">Harvested rewards</span>
+              <span className="activity-amount">+156.78 YFT</span>
+            </div>
+            <div className="activity-time">2 hours ago</div>
+          </div>
+          <div className="activity-item">
+            <div className="activity-icon">📈</div>
+            <div className="activity-details">
+              <span className="activity-action">Staked to ETH-USDC pool</span>
+              <span className="activity-amount">+500 LP</span>
+            </div>
+            <div className="activity-time">1 day ago</div>
+          </div>
+          <div className="activity-item">
+            <div className="activity-icon">💰</div>
+            <div className="activity-details">
+              <span className="activity-action">Withdrew from YFT-ETH pool</span>
+              <span className="activity-amount">-200 LP</span>
+            </div>
+            <div className="activity-time">3 days ago</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+
+  const renderDashboardPools = () => (
+    <div className="dashboard-pools">
+      <div className="pools-header">
+        <h3>Available Farming Pools</h3>
+        <div className="pools-filters">
+          <button className="filter-btn active">All Pools</button>
+          <button className="filter-btn">High APY</button>
+          <button className="filter-btn">Stable Pairs</button>
+          <button className="filter-btn">My Positions</button>
+        </div>
+      </div>
+
+      <div className="pools-grid-dashboard">
+        <div className="pool-card-dashboard hover-lift">
+          <div className="pool-header-dashboard">
+            <div className="pool-tokens">
+              <span className="token-icon animate-float">💎</span>
+              <span className="token-icon animate-float" style={{animationDelay: '1s'}}>💰</span>
+            </div>
+            <div className="pool-info-header">
+              <h4>ETH-USDC LP</h4>
+              <span className="pool-category">Stable Pair</span>
+            </div>
+            <div className="pool-badge">Active</div>
+          </div>
+
+          <div className="pool-metrics">
+            <div className="metric-item">
+              <span className="metric-label">APY</span>
+              <span className="metric-value gradient-text">24.5%</span>
+            </div>
+            <div className="metric-item">
+              <span className="metric-label">TVL</span>
+              <span className="metric-value">$890K</span>
+            </div>
+            <div className="metric-item">
+              <span className="metric-label">Your Stake</span>
+              <span className="metric-value">2,500 LP</span>
+            </div>
+            <div className="metric-item">
+              <span className="metric-label">Pending</span>
+              <span className="metric-value">45.67 YFT</span>
+            </div>
+          </div>
+
+          <div className="pool-actions">
+            <div className="stake-section">
+              <div className="input-group">
+                <input
+                  type="number"
+                  value={stakeAmount}
+                  onChange={(e) => setStakeAmount(e.target.value)}
+                  placeholder="Amount to stake"
+                  className="stake-input"
+                />
+                <button className="btn-primary" onClick={handleStake} disabled={loading || !stakeAmount}>
+                  {loading ? <span className="loading"></span> : 'Stake'}
+                </button>
+              </div>
+              <div className="input-group">
+                <input
+                  type="number"
+                  value={withdrawAmount}
+                  onChange={(e) => setWithdrawAmount(e.target.value)}
+                  placeholder="Amount to withdraw"
+                  className="stake-input"
+                />
+                <button className="btn-secondary" onClick={handleWithdraw} disabled={loading || !withdrawAmount}>
+                  {loading ? <span className="loading"></span> : 'Withdraw'}
+                </button>
+              </div>
+            </div>
+            <button className="btn-harvest" onClick={handleHarvest} disabled={loading}>
+              {loading ? <span className="loading"></span> : 'Harvest Rewards'}
+            </button>
+          </div>
+        </div>
+
+        <div className="pool-card-dashboard hover-lift">
+          <div className="pool-header-dashboard">
+            <div className="pool-tokens">
+              <span className="token-icon animate-float" style={{animationDelay: '2s'}}>🔥</span>
+              <span className="token-icon animate-float" style={{animationDelay: '3s'}}>💎</span>
+            </div>
+            <div className="pool-info-header">
+              <h4>YFT-ETH LP</h4>
+              <span className="pool-category">High Yield</span>
+            </div>
+            <div className="pool-badge hot">Hot</div>
+          </div>
+
+          <div className="pool-metrics">
+            <div className="metric-item">
+              <span className="metric-label">APY</span>
+              <span className="metric-value gradient-text">45.2%</span>
+            </div>
+            <div className="metric-item">
+              <span className="metric-label">TVL</span>
+              <span className="metric-value">$340K</span>
+            </div>
+            <div className="metric-item">
+              <span className="metric-label">Your Stake</span>
+              <span className="metric-value">1,200 LP</span>
+            </div>
+            <div className="metric-item">
+              <span className="metric-label">Pending</span>
+              <span className="metric-value">78.32 YFT</span>
+            </div>
+          </div>
+
+          <div className="pool-actions">
+            <div className="stake-section">
+              <div className="input-group">
+                <input
+                  type="number"
+                  placeholder="Amount to stake"
+                  className="stake-input"
+                />
+                <button className="btn-primary">Stake</button>
+              </div>
+              <div className="input-group">
+                <input
+                  type="number"
+                  placeholder="Amount to withdraw"
+                  className="stake-input"
+                />
+                <button className="btn-secondary">Withdraw</button>
+              </div>
+            </div>
+            <button className="btn-harvest">Harvest Rewards</button>
+          </div>
+        </div>
+
+        <div className="pool-card-dashboard hover-lift">
+          <div className="pool-header-dashboard">
+            <div className="pool-tokens">
+              <span className="token-icon animate-float" style={{animationDelay: '4s'}}>🌟</span>
+              <span className="token-icon animate-float" style={{animationDelay: '5s'}}>💰</span>
+            </div>
+            <div className="pool-info-header">
+              <h4>DAI-USDC LP</h4>
+              <span className="pool-category">Conservative</span>
+            </div>
+            <div className="pool-badge stable">Stable</div>
+          </div>
+
+          <div className="pool-metrics">
+            <div className="metric-item">
+              <span className="metric-label">APY</span>
+              <span className="metric-value gradient-text">12.8%</span>
+            </div>
+            <div className="metric-item">
+              <span className="metric-label">TVL</span>
+              <span className="metric-value">$1.2M</span>
+            </div>
+            <div className="metric-item">
+              <span className="metric-label">Your Stake</span>
+              <span className="metric-value">5,000 LP</span>
+            </div>
+            <div className="metric-item">
+              <span className="metric-label">Pending</span>
+              <span className="metric-value">23.45 YFT</span>
+            </div>
+          </div>
+
+          <div className="pool-actions">
+            <div className="stake-section">
+              <div className="input-group">
+                <input
+                  type="number"
+                  placeholder="Amount to stake"
+                  className="stake-input"
+                />
+                <button className="btn-primary">Stake</button>
+              </div>
+              <div className="input-group">
+                <input
+                  type="number"
+                  placeholder="Amount to withdraw"
+                  className="stake-input"
+                />
+                <button className="btn-secondary">Withdraw</button>
+              </div>
+            </div>
+            <button className="btn-harvest">Harvest Rewards</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+
+  const renderDashboardPortfolio = () => (
+    <div className="dashboard-portfolio-advanced">
+      {/* Header with Market Overview */}
+      <div className="market-header">
+        <div className="market-stats-row">
+          <div className="market-stat">
+            <span className="stat-label">Market Cap</span>
+            <span className="stat-value">$1.2T</span>
+            <span className="stat-change positive">+2.4%</span>
+          </div>
+          <div className="market-stat">
+            <span className="stat-label">24h Volume</span>
+            <span className="stat-value">$42.8B</span>
+            <span className="stat-change positive">+5.1%</span>
+          </div>
+          <div className="market-stat">
+            <span className="stat-label">DeFi TVL</span>
+            <span className="stat-value">$85.3B</span>
+            <span className="stat-change negative">-1.2%</span>
+          </div>
+          <div className="market-stat">
+            <span className="stat-label">Fear & Greed</span>
+            <span className="stat-value">74</span>
+            <span className="stat-badge greed">Greed</span>
+          </div>
+        </div>
+      </div>
+
+      {/* Advanced Trading Chart */}
+      <div className="portfolio-content-grid">
+        <div className="chart-section">
+          <div className="chart-header">
+            <div className="chart-title">Portfolio Performance</div>
+            <div className="chart-timeframe">
+              <button className="timeframe-btn active">1D</button>
+              <button className="timeframe-btn">7D</button>
+              <button className="timeframe-btn">1M</button>
+              <button className="timeframe-btn">3M</button>
+              <button className="timeframe-btn">1Y</button>
+              <button className="timeframe-btn">ALL</button>
+            </div>
+          </div>
+
+          <div className="chart-controls-advanced">
+            <div className="portfolio-value-header">
+              <div className="portfolio-main-value">
+                <span className="portfolio-amount">$12,450.67</span>
+                <span className="portfolio-change positive">+$1,234.56 (+11.0%)</span>
+              </div>
+              <div className="portfolio-stats">
+                <div className="stat-item">
+                  <span className="stat-label">24h High</span>
+                  <span className="stat-value">$12,890.23</span>
+                </div>
+                <div className="stat-item">
+                  <span className="stat-label">24h Low</span>
+                  <span className="stat-value">$11,234.56</span>
+                </div>
+                <div className="stat-item">
+                  <span className="stat-label">24h Volume</span>
+                  <span className="stat-value">$234.5K</span>
+                </div>
+              </div>
+            </div>
+
+            <div className="chart-type-controls">
+              <button className="chart-type-btn active" data-type="area">📈 Area</button>
+              <button className="chart-type-btn" data-type="candlestick">📊 Candlestick</button>
+              <button className="chart-type-btn" data-type="line">📉 Line</button>
+            </div>
+          </div>
+
+          <div className="advanced-chart">
+            <svg viewBox="0 0 800 300" className="trading-chart-svg">
+              <defs>
+                <linearGradient id="portfolioGradientAdvanced" x1="0%" y1="0%" x2="0%" y2="100%">
+                  <stop offset="0%" style={{stopColor: '#667eea', stopOpacity: 0.4}} />
+                  <stop offset="50%" style={{stopColor: '#764ba2', stopOpacity: 0.2}} />
+                  <stop offset="100%" style={{stopColor: '#667eea', stopOpacity: 0}} />
+                </linearGradient>
+                <linearGradient id="volumeGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+                  <stop offset="0%" style={{stopColor: '#00ff88', stopOpacity: 0.3}} />
+                  <stop offset="100%" style={{stopColor: '#00ff88', stopOpacity: 0.1}} />
+                </linearGradient>
+                <filter id="glow">
+                  <feGaussianBlur stdDeviation="3" result="coloredBlur"/>
+                  <feMerge>
+                    <feMergeNode in="coloredBlur"/>
+                    <feMergeNode in="SourceGraphic"/>
+                  </feMerge>
+                </filter>
+              </defs>
+
+              {/* Grid Lines */}
+              <g className="chart-grid" stroke="rgba(255,255,255,0.05)" strokeWidth="1">
+                <line x1="0" y1="60" x2="800" y2="60" />
+                <line x1="0" y1="120" x2="800" y2="120" />
+                <line x1="0" y1="180" x2="800" y2="180" />
+                <line x1="0" y1="240" x2="800" y2="240" />
+                <line x1="160" y1="0" x2="160" y2="300" />
+                <line x1="320" y1="0" x2="320" y2="300" />
+                <line x1="480" y1="0" x2="480" y2="300" />
+                <line x1="640" y1="0" x2="640" y2="300" />
+              </g>
+
+              {/* Volume Bars */}
+              <g className="volume-bars">
+                <rect x="40" y="270" width="8" height="20" fill="url(#volumeGradient)" />
+                <rect x="80" y="260" width="8" height="30" fill="url(#volumeGradient)" />
+                <rect x="120" y="250" width="8" height="40" fill="url(#volumeGradient)" />
+                <rect x="160" y="265" width="8" height="25" fill="url(#volumeGradient)" />
+                <rect x="200" y="240" width="8" height="50" fill="url(#volumeGradient)" />
+                <rect x="240" y="255" width="8" height="35" fill="url(#volumeGradient)" />
+                <rect x="280" y="245" width="8" height="45" fill="url(#volumeGradient)" />
+                <rect x="320" y="235" width="8" height="55" fill="url(#volumeGradient)" />
+                <rect x="360" y="250" width="8" height="40" fill="url(#volumeGradient)" />
+                <rect x="400" y="245" width="8" height="45" fill="url(#volumeGradient)" />
+                <rect x="440" y="240" width="8" height="50" fill="url(#volumeGradient)" />
+                <rect x="480" y="260" width="8" height="30" fill="url(#volumeGradient)" />
+                <rect x="520" y="255" width="8" height="35" fill="url(#volumeGradient)" />
+                <rect x="560" y="235" width="8" height="55" fill="url(#volumeGradient)" />
+                <rect x="600" y="245" width="8" height="45" fill="url(#volumeGradient)" />
+                <rect x="640" y="250" width="8" height="40" fill="url(#volumeGradient)" />
+                <rect x="680" y="260" width="8" height="30" fill="url(#volumeGradient)" />
+                <rect x="720" y="265" width="8" height="25" fill="url(#volumeGradient)" />
+                <rect x="760" y="255" width="8" height="35" fill="url(#volumeGradient)" />
+              </g>
+
+              {/* Main Price Line */}
+              <path
+                d="M0,250 L50,235 L100,220 L150,210 L200,180 L250,195 L300,170 L350,160 L400,150 L450,140 L500,120 L550,110 L600,100 L650,95 L700,80 L750,75 L800,60"
+                stroke="#667eea"
+                strokeWidth="3"
+                fill="none"
+                filter="url(#glow)"
+                className="price-line"
+              />
+
+              {/* Area Fill */}
+              <path
+                d="M0,250 L50,235 L100,220 L150,210 L200,180 L250,195 L300,170 L350,160 L400,150 L450,140 L500,120 L550,110 L600,100 L650,95 L700,80 L750,75 L800,60 L800,300 L0,300 Z"
+                fill="url(#portfolioGradientAdvanced)"
+              />
+
+              {/* Support/Resistance Lines */}
+              <line x1="0" y1="120" x2="800" y2="120" stroke="#00ff88" strokeWidth="2" strokeDasharray="5,5" opacity="0.6" />
+              <line x1="0" y1="200" x2="800" y2="200" stroke="#ff4444" strokeWidth="2" strokeDasharray="5,5" opacity="0.6" />
+
+              {/* Data Points */}
+              <g className="data-points">
+                <circle cx="200" cy="180" r="4" fill="#667eea" className="data-point" />
+                <circle cx="400" cy="150" r="4" fill="#667eea" className="data-point" />
+                <circle cx="600" cy="100" r="4" fill="#667eea" className="data-point" />
+                <circle cx="800" cy="60" r="6" fill="#667eea" className="current-point animate-pulse" />
+              </g>
+
+              {/* Tooltip */}
+              <g className="price-tooltip" transform="translate(800, 60)">
+                <rect x="-60" y="-30" width="120" height="25" rx="5" fill="rgba(0,0,0,0.8)" stroke="rgba(255,255,255,0.2)" />
+                <text x="0" y="-12" textAnchor="middle" fill="white" fontSize="12" fontWeight="600">$12,450.67</text>
+              </g>
+            </svg>
+          </div>
+
+          <div className="chart-stats">
+            <div className="chart-stat">
+              <div className="chart-stat-label">Total Return</div>
+              <div className="chart-stat-value">+11.0%</div>
+            </div>
+            <div className="chart-stat">
+              <div className="chart-stat-label">Sharpe Ratio</div>
+              <div className="chart-stat-value">1.43</div>
+            </div>
+            <div className="chart-stat">
+              <div className="chart-stat-label">Max Drawdown</div>
+              <div className="chart-stat-value">-8.2%</div>
+            </div>
+          </div>
+        </div>
+
+        <div className="performance-sidebar">
+          <div className="performance-card">
+            <div className="performance-header">
+              <svg className="performance-icon" viewBox="0 0 24 24" fill="none">
+                <path d="M12 2L2 7L12 12L22 7L12 2Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                <path d="M2 17L12 22L22 17" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                <path d="M2 12L12 17L22 12" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+              </svg>
+              <span className="performance-title">Total Portfolio</span>
+            </div>
+            <div className="performance-value" style={{color: '#00ff88'}}>$12,450.67</div>
+            <div className="performance-change" style={{color: '#00ff88'}}>+11.0% today</div>
+          </div>
+
+          <div className="performance-card">
+            <div className="performance-header">
+              <svg className="performance-icon" viewBox="0 0 24 24" fill="none">
+                <path d="M13 2L3 14H12L11 22L21 10H12L13 2Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+              </svg>
+              <span className="performance-title">Active Farms</span>
+            </div>
+            <div className="performance-value" style={{color: '#667eea'}}>7</div>
+            <div className="performance-change" style={{color: '#667eea'}}>Generating yield</div>
+          </div>
+
+          <div className="performance-card">
+            <div className="performance-header">
+              <svg className="performance-icon" viewBox="0 0 24 24" fill="none">
+                <circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="2"/>
+                <polyline points="12,6 12,12 16,14" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+              </svg>
+              <span className="performance-title">Pending Rewards</span>
+            </div>
+            <div className="performance-value" style={{color: '#764ba2'}}>$234.56</div>
+            <div className="performance-change" style={{color: '#764ba2'}}>Ready to harvest</div>
+          </div>
+        </div>
+      </div>
+
+      {/* Asset Holdings Table */}
+      <div className="holdings-table">
+        <div className="table-header">
+          <h3>Your Holdings</h3>
+          <div className="table-controls">
+            <button className="control-btn">
+              <span>📊</span> Analytics
+            </button>
+            <button className="control-btn">
+              <span>⚡</span> Auto-Harvest
+            </button>
+            <button className="control-btn">
+              <span>🔄</span> Rebalance
+            </button>
+          </div>
+        </div>
+
+        <div className="table-container">
+          <table className="advanced-table">
+            <thead>
+              <tr>
+                <th>Asset</th>
+                <th>Holdings</th>
+                <th>Price</th>
+                <th>24h %</th>
+                <th>Value</th>
+                <th>Allocation</th>
+                <th>P&L</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr className="table-row">
+                <td>
+                  <div className="asset-info">
+                    <div className="asset-icon">💎</div>
+                    <div>
+                      <div className="asset-name">ETH-USDC LP</div>
+                      <div className="asset-pair">Uniswap V2</div>
+                    </div>
+                  </div>
+                </td>
+                <td>
+                  <div className="holdings-amount">
+                    <div>2,500.00 LP</div>
+                    <div className="holdings-usd">≈ $5,245</div>
+                  </div>
+                </td>
+                <td>
+                  <div className="price-info">
+                    <div>$2.098</div>
+                    <div className="price-change positive">+2.4%</div>
+                  </div>
+                </td>
+                <td>
+                  <span className="percentage positive">+5.2%</span>
+                </td>
+                <td>
+                  <div className="value-info">
+                    <div>$5,245.30</div>
+                    <div className="value-change positive">+$245.30</div>
+                  </div>
+                </td>
+                <td>
+                  <div className="allocation-info">
+                    <div>42.1%</div>
+                    <div className="allocation-bar">
+                      <div className="bar-fill" style={{width: '42.1%', background: '#667eea'}}></div>
+                    </div>
+                  </div>
+                </td>
+                <td>
+                  <div className="pnl positive">
+                    <div>+$456.78</div>
+                    <div>+9.5%</div>
+                  </div>
+                </td>
+                <td>
+                  <div className="action-buttons">
+                    <button className="action-btn buy">Buy</button>
+                    <button className="action-btn sell">Sell</button>
+                  </div>
+                </td>
+              </tr>
+
+              <tr className="table-row">
+                <td>
+                  <div className="asset-info">
+                    <div className="asset-icon">🔥</div>
+                    <div>
+                      <div className="asset-name">YFT-ETH LP</div>
+                      <div className="asset-pair">Uniswap V2</div>
+                    </div>
+                  </div>
+                </td>
+                <td>
+                  <div className="holdings-amount">
+                    <div>1,200.00 LP</div>
+                    <div className="holdings-usd">≈ $3,890</div>
+                  </div>
+                </td>
+                <td>
+                  <div className="price-info">
+                    <div>$3.242</div>
+                    <div className="price-change positive">+8.7%</div>
+                  </div>
+                </td>
+                <td>
+                  <span className="percentage positive">+12.4%</span>
+                </td>
+                <td>
+                  <div className="value-info">
+                    <div>$3,890.45</div>
+                    <div className="value-change positive">+$390.45</div>
+                  </div>
+                </td>
+                <td>
+                  <div className="allocation-info">
+                    <div>31.3%</div>
+                    <div className="allocation-bar">
+                      <div className="bar-fill" style={{width: '31.3%', background: '#764ba2'}}></div>
+                    </div>
+                  </div>
+                </td>
+                <td>
+                  <div className="pnl positive">
+                    <div>+$623.12</div>
+                    <div>+19.1%</div>
+                  </div>
+                </td>
+                <td>
+                  <div className="action-buttons">
+                    <button className="action-btn buy">Buy</button>
+                    <button className="action-btn sell">Sell</button>
+                  </div>
+                </td>
+              </tr>
+
+              <tr className="table-row">
+                <td>
+                  <div className="asset-info">
+                    <div className="asset-icon">🌟</div>
+                    <div>
+                      <div className="asset-name">DAI-USDC LP</div>
+                      <div className="asset-pair">Uniswap V2</div>
+                    </div>
+                  </div>
+                </td>
+                <td>
+                  <div className="holdings-amount">
+                    <div>3,315.00 LP</div>
+                    <div className="holdings-usd">≈ $3,315</div>
+                  </div>
+                </td>
+                <td>
+                  <div className="price-info">
+                    <div>$1.001</div>
+                    <div className="price-change positive">+0.1%</div>
+                  </div>
+                </td>
+                <td>
+                  <span className="percentage positive">+0.3%</span>
+                </td>
+                <td>
+                  <div className="value-info">
+                    <div>$3,314.92</div>
+                    <div className="value-change positive">+$14.92</div>
+                  </div>
+                </td>
+                <td>
+                  <div className="allocation-info">
+                    <div>26.6%</div>
+                    <div className="allocation-bar">
+                      <div className="bar-fill" style={{width: '26.6%', background: '#10b981'}}></div>
+                    </div>
+                  </div>
+                </td>
+                <td>
+                  <div className="pnl positive">
+                    <div>+$154.88</div>
+                    <div>+4.9%</div>
+                  </div>
+                </td>
+                <td>
+                  <div className="action-buttons">
+                    <button className="action-btn buy">Buy</button>
+                    <button className="action-btn sell">Sell</button>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      {/* Token Performance Analytics Dashboard */}
+      <div className="token-performance-analytics">
+        <div className="analytics-header">
+          <h3>Token Performance Analytics</h3>
+          <div className="analytics-period-selector">
+            <button className="period-btn active">24H</button>
+            <button className="period-btn">7D</button>
+            <button className="period-btn">30D</button>
+            <button className="period-btn">90D</button>
+          </div>
+        </div>
+
+        <div className="performance-grid">
+          <div className="performance-overview-card">
+            <div className="card-header">
+              <h4>Portfolio Performance Summary</h4>
+              <div className="performance-indicator positive">
+                <span className="indicator-icon">📈</span>
+                <span className="indicator-text">Strong Performance</span>
+              </div>
+            </div>
+            <div className="performance-summary-grid">
+              <div className="summary-metric">
+                <span className="metric-label">Total Gains</span>
+                <span className="metric-value positive">+$1,234.35</span>
+                <span className="metric-change">+11.2% overall</span>
+              </div>
+              <div className="summary-metric">
+                <span className="metric-label">Best Performer</span>
+                <span className="metric-value">YFT-ETH LP</span>
+                <span className="metric-change positive">+19.3% ROI</span>
+              </div>
+              <div className="summary-metric">
+                <span className="metric-label">Total Value</span>
+                <span className="metric-value">$12,450.67</span>
+                <span className="metric-change positive">+$583.45 today</span>
+              </div>
+              <div className="summary-metric">
+                <span className="metric-label">Diversification</span>
+                <span className="metric-value">4 pools</span>
+                <span className="metric-change">Well balanced</span>
+              </div>
+            </div>
+          </div>
+
+          <div className="token-analysis-cards">
+            <div className="analysis-card">
+              <div className="card-header">
+                <h4>Risk-Reward Analysis</h4>
+                <div className="analysis-badge medium-risk">Medium Risk</div>
+              </div>
+              <div className="analysis-content">
+                <div className="risk-metric">
+                  <span className="metric-name">Portfolio Beta</span>
+                  <span className="metric-value">1.23</span>
+                  <div className="metric-bar">
+                    <div className="metric-fill" style={{width: '61.5%', backgroundColor: '#ffa500'}}></div>
+                  </div>
+                </div>
+                <div className="risk-metric">
+                  <span className="metric-name">Volatility (30d)</span>
+                  <span className="metric-value">18.4%</span>
+                  <div className="metric-bar">
+                    <div className="metric-fill" style={{width: '36.8%', backgroundColor: '#00ff88'}}></div>
+                  </div>
+                </div>
+                <div className="risk-metric">
+                  <span className="metric-name">Sharpe Ratio</span>
+                  <span className="metric-value">2.15</span>
+                  <div className="metric-bar">
+                    <div className="metric-fill" style={{width: '86%', backgroundColor: '#00ff88'}}></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div className="analysis-card">
+              <div className="card-header">
+                <h4>Yield Optimization</h4>
+                <div className="analysis-badge high-yield">High Yield</div>
+              </div>
+              <div className="yield-recommendations">
+                <div className="recommendation">
+                  <div className="recommendation-header">
+                    <span className="recommendation-icon">🔄</span>
+                    <span className="recommendation-title">Rebalance Suggestion</span>
+                  </div>
+                  <p>Consider moving 5% from DAI-USDC to YFT-ETH for +2.1% APY increase</p>
+                  <div className="recommendation-impact positive">+$45.67 annually</div>
+                </div>
+                <div className="recommendation">
+                  <div className="recommendation-header">
+                    <span className="recommendation-icon">⚡</span>
+                    <span className="recommendation-title">Auto-Compound</span>
+                  </div>
+                  <p>Enable auto-compounding on YFT-ETH LP to maximize returns</p>
+                  <div className="recommendation-impact positive">+3.2% APY boost</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Detailed Token Metrics */}
+        <div className="detailed-token-metrics">
+          <div className="metrics-section-header">
+            <h4>Individual Token Analysis</h4>
+            <div className="metrics-view-toggle">
+              <button className="toggle-btn active">Performance</button>
+              <button className="toggle-btn">Technical</button>
+              <button className="toggle-btn">Fundamentals</button>
+            </div>
+          </div>
+
+          <div className="token-metrics-grid">
+            <div className="token-metric-card">
+              <div className="token-header">
+                <div className="token-info">
+                  <div className="token-icon">E</div>
+                  <div className="token-details">
+                    <h5>ETH-USDC LP</h5>
+                    <span className="token-protocol">Uniswap V3</span>
+                  </div>
+                </div>
+                <div className="token-performance positive">+9.6%</div>
+              </div>
+              <div className="token-metrics">
+                <div className="metric-row">
+                  <span className="metric-label">7-day Performance</span>
+                  <span className="metric-value positive">+14.2%</span>
+                </div>
+                <div className="metric-row">
+                  <span className="metric-label">Current APY</span>
+                  <span className="metric-value">45.3%</span>
+                </div>
+                <div className="metric-row">
+                  <span className="metric-label">Impermanent Loss</span>
+                  <span className="metric-value negative">-1.2%</span>
+                </div>
+                <div className="metric-row">
+                  <span className="metric-label">Fee Rewards (24h)</span>
+                  <span className="metric-value positive">+$12.45</span>
+                </div>
+              </div>
+            </div>
+
+            <div className="token-metric-card">
+              <div className="token-header">
+                <div className="token-info">
+                  <div className="token-icon">Y</div>
+                  <div className="token-details">
+                    <h5>YFT-ETH LP</h5>
+                    <span className="token-protocol">YieldFarm</span>
+                  </div>
+                </div>
+                <div className="token-performance positive">+19.3%</div>
+              </div>
+              <div className="token-metrics">
+                <div className="metric-row">
+                  <span className="metric-label">7-day Performance</span>
+                  <span className="metric-value positive">+23.7%</span>
+                </div>
+                <div className="metric-row">
+                  <span className="metric-label">Current APY</span>
+                  <span className="metric-value">67.8%</span>
+                </div>
+                <div className="metric-row">
+                  <span className="metric-label">Reward Multiplier</span>
+                  <span className="metric-value">2.3x</span>
+                </div>
+                <div className="metric-row">
+                  <span className="metric-label">Pending Rewards</span>
+                  <span className="metric-value positive">+$78.90</span>
+                </div>
+              </div>
+            </div>
+
+            <div className="token-metric-card">
+              <div className="token-header">
+                <div className="token-info">
+                  <div className="token-icon">D</div>
+                  <div className="token-details">
+                    <h5>DAI-USDC LP</h5>
+                    <span className="token-protocol">Balancer</span>
+                  </div>
+                </div>
+                <div className="token-performance positive">+3.7%</div>
+              </div>
+              <div className="token-metrics">
+                <div className="metric-row">
+                  <span className="metric-label">7-day Performance</span>
+                  <span className="metric-value positive">+1.8%</span>
+                </div>
+                <div className="metric-row">
+                  <span className="metric-label">Current APY</span>
+                  <span className="metric-value">12.6%</span>
+                </div>
+                <div className="metric-row">
+                  <span className="metric-label">Risk Level</span>
+                  <span className="metric-value">Very Low</span>
+                </div>
+                <div className="metric-row">
+                  <span className="metric-label">BAL Rewards</span>
+                  <span className="metric-value positive">+$2.34</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Performance Metrics */}
+      <div className="performance-metrics">
+        <div className="metrics-grid-advanced">
+          <div className="metric-card">
+            <div className="metric-header">
+              <span className="metric-icon">📈</span>
+              <span className="metric-title">Total Return</span>
+            </div>
+            <div className="metric-value positive">+$1,234.78</div>
+            <div className="metric-subtitle">+11.0% since inception</div>
+          </div>
+
+          <div className="metric-card">
+            <div className="metric-header">
+              <span className="metric-icon">💰</span>
+              <span className="metric-title">Daily P&L</span>
+            </div>
+            <div className="metric-value positive">+$156.23</div>
+            <div className="metric-subtitle">+1.3% today</div>
+          </div>
+
+          <div className="metric-card">
+            <div className="metric-header">
+              <span className="metric-icon">⚡</span>
+              <span className="metric-title">Best Performer</span>
+            </div>
+            <div className="metric-value">YFT-ETH LP</div>
+            <div className="metric-subtitle positive">+19.1% return</div>
+          </div>
+
+          <div className="metric-card">
+            <div className="metric-header">
+              <span className="metric-icon">🎯</span>
+              <span className="metric-title">Avg. APY</span>
+            </div>
+            <div className="metric-value">23.7%</div>
+            <div className="metric-subtitle">Weighted average</div>
+          </div>
+        </div>
+      </div>
+
+      {/* Comprehensive Market Metrics & Protocol Statistics */}
+      <div className="market-metrics-comprehensive">
+        <div className="metrics-header">
+          <h3>Market Analysis & Protocol Statistics</h3>
+          <div className="metrics-controls">
+            <button className="metric-filter-btn active">All Markets</button>
+            <button className="metric-filter-btn">DeFi</button>
+            <button className="metric-filter-btn">Yield</button>
+            <button className="metric-filter-btn">Governance</button>
+          </div>
+        </div>
+
+        {/* Market Overview Grid */}
+        <div className="market-overview-grid">
+          <div className="market-metric-card">
+            <div className="metric-card-header">
+              <div className="metric-icon-large">🌐</div>
+              <div className="metric-card-title">
+                <h4>Global DeFi Market</h4>
+                <span className="metric-subtitle">Real-time data</span>
+              </div>
+            </div>
+            <div className="metric-data-grid">
+              <div className="metric-data-item">
+                <span className="data-label">Total TVL</span>
+                <span className="data-value">$48.7B</span>
+                <span className="data-change positive">+3.2%</span>
+              </div>
+              <div className="metric-data-item">
+                <span className="data-label">24h Volume</span>
+                <span className="data-value">$3.2B</span>
+                <span className="data-change negative">-1.8%</span>
+              </div>
+              <div className="metric-data-item">
+                <span className="data-label">Active Protocols</span>
+                <span className="data-value">2,847</span>
+                <span className="data-change positive">+12</span>
+              </div>
+              <div className="metric-data-item">
+                <span className="data-label">Avg APY</span>
+                <span className="data-value">18.4%</span>
+                <span className="data-change neutral">±0.0%</span>
+              </div>
+            </div>
+          </div>
+
+          <div className="market-metric-card">
+            <div className="metric-card-header">
+              <div className="metric-icon-large">⚡</div>
+              <div className="metric-card-title">
+                <h4>YieldFarm Protocol</h4>
+                <span className="metric-subtitle">Protocol statistics</span>
+              </div>
+            </div>
+            <div className="metric-data-grid">
+              <div className="metric-data-item">
+                <span className="data-label">Protocol TVL</span>
+                <span className="data-value">$8.9M</span>
+                <span className="data-change positive">+15.7%</span>
+              </div>
+              <div className="metric-data-item">
+                <span className="data-label">Active Farmers</span>
+                <span className="data-value">4,283</span>
+                <span className="data-change positive">+8.1%</span>
+              </div>
+              <div className="metric-data-item">
+                <span className="data-label">Total Rewards</span>
+                <span className="data-value">$342K</span>
+                <span className="data-change positive">+23.4%</span>
+              </div>
+              <div className="metric-data-item">
+                <span className="data-label">Pools Active</span>
+                <span className="data-value">12</span>
+                <span className="data-change neutral">±0</span>
+              </div>
+            </div>
+          </div>
+
+          <div className="market-metric-card">
+            <div className="metric-card-header">
+              <div className="metric-icon-large">📊</div>
+              <div className="metric-card-title">
+                <h4>Pool Performance</h4>
+                <span className="metric-subtitle">Top performing pools</span>
+              </div>
+            </div>
+            <div className="pool-performance-list">
+              <div className="pool-item">
+                <div className="pool-info">
+                  <span className="pool-name">ETH-USDC</span>
+                  <span className="pool-protocol">Uniswap V3</span>
+                </div>
+                <div className="pool-metrics">
+                  <span className="pool-apy">45.2% APY</span>
+                  <span className="pool-change positive">+2.1%</span>
+                </div>
+              </div>
+              <div className="pool-item">
+                <div className="pool-info">
+                  <span className="pool-name">YFT-ETH</span>
+                  <span className="pool-protocol">YieldFarm</span>
+                </div>
+                <div className="pool-metrics">
+                  <span className="pool-apy">38.7% APY</span>
+                  <span className="pool-change positive">+5.8%</span>
+                </div>
+              </div>
+              <div className="pool-item">
+                <div className="pool-info">
+                  <span className="pool-name">WBTC-USDT</span>
+                  <span className="pool-protocol">Curve</span>
+                </div>
+                <div className="pool-metrics">
+                  <span className="pool-apy">23.1% APY</span>
+                  <span className="pool-change negative">-0.9%</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Detailed Protocol Analytics */}
+        <div className="protocol-analytics-section">
+          <div className="analytics-row">
+            <div className="analytics-chart-card">
+              <div className="chart-card-header">
+                <h4>TVL Growth Trend</h4>
+                <div className="chart-period-selector">
+                  <button className="period-btn active">7D</button>
+                  <button className="period-btn">30D</button>
+                  <button className="period-btn">90D</button>
+                </div>
+              </div>
+              <div className="mini-chart">
+                <svg viewBox="0 0 400 150" className="tvl-chart">
+                  <defs>
+                    <linearGradient id="tvlGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+                      <stop offset="0%" style={{stopColor: '#00ff88', stopOpacity: 0.3}} />
+                      <stop offset="100%" style={{stopColor: '#00ff88', stopOpacity: 0}} />
+                    </linearGradient>
+                  </defs>
+                  <path
+                    d="M0,120 L50,110 L100,95 L150,85 L200,75 L250,65 L300,55 L350,45 L400,35"
+                    stroke="#00ff88"
+                    strokeWidth="2"
+                    fill="none"
+                  />
+                  <path
+                    d="M0,120 L50,110 L100,95 L150,85 L200,75 L250,65 L300,55 L350,45 L400,35 L400,150 L0,150 Z"
+                    fill="url(#tvlGradient)"
+                  />
+                </svg>
+                <div className="chart-value">$8.9M TVL</div>
+              </div>
+            </div>
+
+            <div className="analytics-chart-card">
+              <div className="chart-card-header">
+                <h4>User Activity</h4>
+                <div className="activity-indicator">
+                  <span className="activity-dot active"></span>
+                  <span>Live</span>
+                </div>
+              </div>
+              <div className="activity-stats">
+                <div className="activity-metric">
+                  <span className="activity-label">Daily Active Users</span>
+                  <span className="activity-value">1,247</span>
+                  <span className="activity-trend positive">↗ +12%</span>
+                </div>
+                <div className="activity-metric">
+                  <span className="activity-label">New Farmers Today</span>
+                  <span className="activity-value">89</span>
+                  <span className="activity-trend positive">↗ +34%</span>
+                </div>
+                <div className="activity-metric">
+                  <span className="activity-label">Transactions</span>
+                  <span className="activity-value">3,421</span>
+                  <span className="activity-trend neutral">→ +2%</span>
+                </div>
+              </div>
+            </div>
+
+            <div className="analytics-chart-card">
+              <div className="chart-card-header">
+                <h4>Risk Assessment</h4>
+                <div className="risk-score">
+                  <span className="score-value">7.2</span>
+                  <span className="score-label">/10</span>
+                </div>
+              </div>
+              <div className="risk-breakdown">
+                <div className="risk-item">
+                  <span className="risk-category">Smart Contract</span>
+                  <div className="risk-bar">
+                    <div className="risk-fill" style={{width: '85%', backgroundColor: '#00ff88'}}></div>
+                  </div>
+                  <span className="risk-rating">Low</span>
+                </div>
+                <div className="risk-item">
+                  <span className="risk-category">Liquidity</span>
+                  <div className="risk-bar">
+                    <div className="risk-fill" style={{width: '70%', backgroundColor: '#ffa500'}}></div>
+                  </div>
+                  <span className="risk-rating">Medium</span>
+                </div>
+                <div className="risk-item">
+                  <span className="risk-category">Market</span>
+                  <div className="risk-bar">
+                    <div className="risk-fill" style={{width: '60%', backgroundColor: '#ff4444'}}></div>
+                  </div>
+                  <span className="risk-rating">High</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Market Comparison Table */}
+        <div className="market-comparison-section">
+          <div className="comparison-header">
+            <h4>Protocol Comparison</h4>
+            <div className="comparison-filters">
+              <button className="comparison-filter active">All</button>
+              <button className="comparison-filter">Yield Farming</button>
+              <button className="comparison-filter">DEX</button>
+              <button className="comparison-filter">Lending</button>
+            </div>
+          </div>
+          <div className="comparison-table-container">
+            <table className="market-comparison-table">
+              <thead>
+                <tr>
+                  <th>Protocol</th>
+                  <th>TVL</th>
+                  <th>24h Change</th>
+                  <th>APY Range</th>
+                  <th>Users</th>
+                  <th>Risk Score</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr className="protocol-row">
+                  <td>
+                    <div className="protocol-info">
+                      <div className="protocol-icon">🌾</div>
+                      <div>
+                        <div className="protocol-name">YieldFarm</div>
+                        <div className="protocol-category">Yield Farming</div>
+                      </div>
+                    </div>
+                  </td>
+                  <td><strong>$8.9M</strong></td>
+                  <td><span className="change-badge positive">+15.7%</span></td>
+                  <td>12.5% - 45.2%</td>
+                  <td>4,283</td>
+                  <td>
+                    <div className="risk-indicator low">7.2</div>
+                  </td>
+                  <td><span className="status-badge active">Active</span></td>
+                </tr>
+                <tr className="protocol-row">
+                  <td>
+                    <div className="protocol-info">
+                      <div className="protocol-icon">🦄</div>
+                      <div>
+                        <div className="protocol-name">Uniswap V3</div>
+                        <div className="protocol-category">DEX</div>
+                      </div>
+                    </div>
+                  </td>
+                  <td><strong>$4.2B</strong></td>
+                  <td><span className="change-badge positive">+3.2%</span></td>
+                  <td>5.1% - 89.4%</td>
+                  <td>287K</td>
+                  <td>
+                    <div className="risk-indicator low">8.9</div>
+                  </td>
+                  <td><span className="status-badge active">Active</span></td>
+                </tr>
+                <tr className="protocol-row">
+                  <td>
+                    <div className="protocol-info">
+                      <div className="protocol-icon">🏪</div>
+                      <div>
+                        <div className="protocol-name">Curve Finance</div>
+                        <div className="protocol-category">DEX</div>
+                      </div>
+                    </div>
+                  </td>
+                  <td><strong>$2.1B</strong></td>
+                  <td><span className="change-badge negative">-2.1%</span></td>
+                  <td>2.3% - 34.7%</td>
+                  <td>45K</td>
+                  <td>
+                    <div className="risk-indicator medium">6.8</div>
+                  </td>
+                  <td><span className="status-badge active">Active</span></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+
+  const renderDashboardAnalytics = () => (
+    <div className="dashboard-analytics">
+      <div className="analytics-header">
+        <h3>Protocol Analytics</h3>
+      </div>
+
+      <div className="analytics-grid">
+        <div className="analytics-card">
+          <h4>Protocol Metrics</h4>
+          <div className="metrics-list">
+            <div className="metric-row">
+              <span className="metric-name">Total Value Locked</span>
+              <span className="metric-amount">$2.4M</span>
+              <span className="metric-change positive">+12.5%</span>
+            </div>
+            <div className="metric-row">
+              <span className="metric-name">24h Volume</span>
+              <span className="metric-amount">$890K</span>
+              <span className="metric-change positive">+8.2%</span>
+            </div>
+            <div className="metric-row">
+              <span className="metric-name">Active Users</span>
+              <span className="metric-amount">1,247</span>
+              <span className="metric-change positive">+89</span>
+            </div>
+            <div className="metric-row">
+              <span className="metric-name">Total Pools</span>
+              <span className="metric-amount">3</span>
+              <span className="metric-change neutral">Active</span>
+            </div>
+          </div>
+        </div>
+
+        <div className="analytics-card">
+          <h4>Top Performing Pools</h4>
+          <div className="performance-list">
+            <div className="performance-item">
+              <div className="pool-identity">
+                <span className="pool-icon">🔥💎</span>
+                <span className="pool-name">YFT-ETH LP</span>
+              </div>
+              <span className="pool-apy">45.2%</span>
+            </div>
+            <div className="performance-item">
+              <div className="pool-identity">
+                <span className="pool-icon">💎💰</span>
+                <span className="pool-name">ETH-USDC LP</span>
+              </div>
+              <span className="pool-apy">24.5%</span>
+            </div>
+            <div className="performance-item">
+              <div className="pool-identity">
+                <span className="pool-icon">🌟💰</span>
+                <span className="pool-name">DAI-USDC LP</span>
+              </div>
+              <span className="pool-apy">12.8%</span>
+            </div>
+          </div>
+        </div>
+
+        <div className="analytics-card">
+          <h4>Yield Distribution</h4>
+          <div className="distribution-chart">
+            <div className="distribution-item">
+              <div className="distribution-bar">
+                <div className="bar-fill" style={{width: '60%'}}></div>
+              </div>
+              <span className="distribution-label">Staking Rewards</span>
+              <span className="distribution-value">60%</span>
+            </div>
+            <div className="distribution-item">
+              <div className="distribution-bar">
+                <div className="bar-fill" style={{width: '25%'}}></div>
+              </div>
+              <span className="distribution-label">LP Fees</span>
+              <span className="distribution-value">25%</span>
+            </div>
+            <div className="distribution-item">
+              <div className="distribution-bar">
+                <div className="bar-fill" style={{width: '15%'}}></div>
+              </div>
+              <span className="distribution-label">Bonus Rewards</span>
+              <span className="distribution-value">15%</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+
+  const renderDashboardContent = () => {
+    switch (activeDashboardPage) {
+      case 'overview':
+        return renderDashboardOverview();
+      case 'pools':
+        return renderDashboardPools();
+      case 'portfolio':
+        return renderDashboardPortfolio();
+      case 'analytics':
+        return renderDashboardAnalytics();
+      default:
+        return renderDashboardOverview();
+    }
+  };
+
   const renderApp = () => (
     <div className="app-section">
       {message && (
-        <div className={message.type}>
+        <div className={`message ${message.type}`}>
           {message.text}
         </div>
       )}
 
       {!account ? (
         <div className="connect-prompt">
-          <div className="connect-card">
+          <div className="connect-card hover-lift animate-scale-in">
+            <div className="connect-icon">🔗</div>
             <h2>Connect Your Wallet</h2>
-            <p>Connect your MetaMask wallet to start farming</p>
-            <button className="button" onClick={connectWallet}>
-              Connect Wallet
+            <p>Connect your MetaMask wallet to start farming and earning rewards</p>
+            <button className="connect-button hover-shimmer" onClick={connectWallet}>
+              <span>Connect Wallet</span>
+              <span className="connect-arrow">→</span>
             </button>
+            <div className="connect-features">
+              <span>✓ Secure Connection</span>
+              <span>✓ Non-Custodial</span>
+              <span>✓ Web3 Native</span>
+            </div>
           </div>
         </div>
       ) : (
-        <>
-          <div className="dashboard-header">
-            <h2>Farming Dashboard</h2>
-            <div className="wallet-status">
-              Connected: {account.slice(0, 6)}...{account.slice(-4)}
+        <div className="dashboard">
+          {/* Dashboard Header */}
+          <div className="dashboard-header-new">
+            <div className="dashboard-title">
+              <h2>Farming Dashboard</h2>
+              <span className="dashboard-subtitle">Welcome back, farmer! 🌾</span>
+            </div>
+            <div className="dashboard-user">
+              <div className="user-info">
+                <span className="user-address">{account.slice(0, 6)}...{account.slice(-4)}</span>
+                <span className="user-status">Connected</span>
+              </div>
+              <div className="user-avatar">👤</div>
             </div>
           </div>
 
-          <div className="stats-grid">
-            <div className="stat-card">
-              <div className="stat-value">{userStats.stakedAmount || '0'}</div>
-              <div className="stat-label">LP Tokens Staked</div>
-            </div>
-            <div className="stat-card">
-              <div className="stat-value">{userStats.pendingReward || '0'}</div>
-              <div className="stat-label">Pending Rewards</div>
-            </div>
-            <div className="stat-card">
-              <div className="stat-value">{userStats.lpBalance || '0'}</div>
-              <div className="stat-label">LP Token Balance</div>
-            </div>
-            <div className="stat-card">
-              <div className="stat-value">{userStats.rewardBalance || '0'}</div>
-              <div className="stat-label">Reward Token Balance</div>
-            </div>
+          {/* Dashboard Navigation */}
+          <div className="dashboard-nav">
+            <button
+              className={`nav-tab ${activeDashboardPage === 'overview' ? 'active' : ''}`}
+              onClick={() => setActiveDashboardPage('overview')}
+            >
+              <span className="tab-icon">🏠</span>
+              <span>Overview</span>
+            </button>
+            <button
+              className={`nav-tab ${activeDashboardPage === 'pools' ? 'active' : ''}`}
+              onClick={() => setActiveDashboardPage('pools')}
+            >
+              <span className="tab-icon">🌊</span>
+              <span>Pools</span>
+            </button>
+            <button
+              className={`nav-tab ${activeDashboardPage === 'portfolio' ? 'active' : ''}`}
+              onClick={() => setActiveDashboardPage('portfolio')}
+            >
+              <span className="tab-icon">📊</span>
+              <span>Portfolio</span>
+            </button>
+            <button
+              className={`nav-tab ${activeDashboardPage === 'analytics' ? 'active' : ''}`}
+              onClick={() => setActiveDashboardPage('analytics')}
+            >
+              <span className="tab-icon">📈</span>
+              <span>Analytics</span>
+            </button>
           </div>
 
-          <div className="farm-section">
-            <div className="card">
-              <h3>Stake LP Tokens</h3>
-              <div className="input-group">
-                <label>Amount to Stake</label>
-                <input
-                  type="number"
-                  value={stakeAmount}
-                  onChange={(e) => setStakeAmount(e.target.value)}
-                  placeholder="Enter amount"
-                />
-              </div>
-              <button
-                className="button"
-                onClick={handleStake}
-                disabled={loading || !stakeAmount}
-              >
-                {loading ? <span className="loading"></span> : 'Stake Tokens'}
-              </button>
-            </div>
-
-            <div className="card">
-              <h3>Withdraw & Harvest</h3>
-              <div className="input-group">
-                <label>Amount to Withdraw</label>
-                <input
-                  type="number"
-                  value={withdrawAmount}
-                  onChange={(e) => setWithdrawAmount(e.target.value)}
-                  placeholder="Enter amount"
-                />
-              </div>
-              <button
-                className="button"
-                onClick={handleWithdraw}
-                disabled={loading || !withdrawAmount}
-              >
-                {loading ? <span className="loading"></span> : 'Withdraw Tokens'}
-              </button>
-              <button
-                className="button"
-                onClick={handleHarvest}
-                disabled={loading}
-              >
-                {loading ? <span className="loading"></span> : 'Harvest Rewards'}
-              </button>
-            </div>
+          {/* Dashboard Content */}
+          <div className="dashboard-content">
+            {renderDashboardContent()}
           </div>
 
           {CONTRACT_ADDRESSES.yieldFarm === '0x...' && (
-            <div className="warning">
-              <strong>Note:</strong> Contract addresses are not set. Please deploy the contracts and update the addresses in the frontend code.
+            <div className="dashboard-warning">
+              <div className="warning-content">
+                <span className="warning-icon">⚠️</span>
+                <div>
+                  <strong>Development Mode</strong>
+                  <p>Contract addresses are not set. Deploy contracts and update addresses for full functionality.</p>
+                </div>
+              </div>
             </div>
           )}
-        </>
+        </div>
       )}
     </div>
   );
